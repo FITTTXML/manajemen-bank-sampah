@@ -1,0 +1,17 @@
+{
+  "name": "sibanksampah-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "rimraf frontend/.next && concurrently -r \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:clean": "npm run clean && npm run dev",
+    "clean": "rimraf frontend/.next",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^6.1.3"
+  }
+}

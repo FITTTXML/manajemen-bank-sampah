@@ -1,0 +1,12 @@
+{
+  "watch": ["src"],
+  "ext": "ts,json",
+  "ignore": ["auth_info_baileys/**"],
+  "exec": "ts-node src/server.ts",
+  "delay": "2000",
+  "restartable": "rs",
+  "signal": "SIGTERM",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}
