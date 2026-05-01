@@ -117,7 +117,7 @@ export const updateStatusPenjemputan = async (req: Request, res: Response) => {
         alasanTolak: status === 'ditolak' ? alasanTolak : null,
         tanggalJemput: status === 'dijemput' ? new Date() : undefined,
       })
-      .where(eq(penjemputan.id, id))
+      .where(eq(penjemputan.id, id as string))
       .returning();
 
     if (!updated) {

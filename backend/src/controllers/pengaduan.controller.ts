@@ -8,7 +8,7 @@ import { waService } from '../services/whatsapp.service';
 export const createPengaduan = async (req: Request, res: Response) => {
   try {
     const { subjek, pesan } = req.body;
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
 
     if (!userId) {
       return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -35,7 +35,7 @@ export const createPengaduan = async (req: Request, res: Response) => {
 // Nasabah / Petugas melihat riwayat pengaduan mereka sendiri
 export const getMyPengaduan = async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
 
     const riwayat = await db.select()
@@ -86,7 +86,7 @@ export const balasPengaduan = async (req: Request, res: Response) => {
         tanggapan, 
         status: 'selesai' 
       })
-      .where(eq(pengaduan.id, id))
+      .where(eq(pengaduan.id, id as string))
       .returning();
 
     if (updated.length === 0) {
@@ -99,7 +99,7 @@ export const balasPengaduan = async (req: Request, res: Response) => {
       const complainData = await db.select({ hp: users.nomorHp, nama: users.namaLengkap })
         .from(pengaduan)
         .innerJoin(users, eq(pengaduan.userId, users.id))
-        .where(eq(pengaduan.id, id))
+        .where(eq(pengaduan.id, id as string))
         .limit(1);
       
       const noHp = complainData[0]?.hp;
