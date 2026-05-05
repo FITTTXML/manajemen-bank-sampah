@@ -11,7 +11,7 @@
     "install:all": "npm install --prefix frontend && npm install --prefix backend",
     "postinstall": "npm run install:all",
     "build": "npm run build --prefix backend && npm run build --prefix frontend",
-    "start": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\""
+    "start": "concurrently \"PORT=5000 npm start --prefix backend\" \"npm start --prefix frontend\""
   },
   "dependencies": {
     "concurrently": "^8.2.2",

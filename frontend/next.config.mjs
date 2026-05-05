@@ -13,6 +13,14 @@ const nextConfig = {
       ignored: ['**/node_modules/**', '**/System Volume Information/**', '**/.git/**'],
     };
     return config;
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/api/:path*'
+      }
+    ];
   }
 };
 
