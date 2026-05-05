@@ -8,9 +8,12 @@
     "clean": "rimraf frontend/.next",
     "dev:frontend": "npm run dev --prefix frontend",
     "dev:backend": "npm run dev --prefix backend",
-    "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend"
+    "install:all": "npm install --prefix frontend && npm install --prefix backend",
+    "postinstall": "npm run install:all",
+    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "start": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\""
   },
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^8.2.2",
     "rimraf": "^6.1.3"
   }
