@@ -6,8 +6,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const generateToken = (id: string, role: string) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET as string, {
-    expiresIn: (process.env.JWT_EXPIRES_IN as any) || '1d',
+  return jwt.sign({ id, role }, process.env.JWT_SECRET || 'supersecretkey_sibanksampah2026', {
+    expiresIn: '1d',
   });
 };
 
