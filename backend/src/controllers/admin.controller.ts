@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from '../db';
-import { users, nasabah, setoran, detailSetoran } from '../db/schema';
+import { users, nasabah, penjemputan, detailPenjemputan } from '../db/schema';
 import { eq, sql } from 'drizzle-orm';
 
 export const getDashboardStats = async (req: Request, res: Response) => {
@@ -11,22 +11,23 @@ export const getDashboardStats = async (req: Request, res: Response) => {
       .from(users)
       .where(eq(users.role, 'nasabah'));
 
-    // 2. Total Berat Sampah Setoran
+    // 2. Total Berat Sampah Dijemput
     const [{ totalBerat }] = await db
-      .select({ totalBerat: sql<number>`sum(${detailSetoran.beratKg})` })
-      .from(detailSetoran);
+      .select({ totalBerat: sql<number>`sum(${detailPenjemputan.beratKg})` })
+      .from(detailPenjemputan);
 
-    // 3. Total Saldo Beredar (Nasabah)
-    const [{ totalSaldo }] = await db
-      .select({ totalSaldo: sql<number>`sum(${nasabah.saldo})` })
-      .from(nasabah);
+    // 3. Total Pendapatan Jasa (Lunas)
+    const [{ totalPendapatan }] = await db
+      .select({ totalPendapatan: sql<number>`sum(${penjemputan.totalBiaya})` })
+      .from(penjemputan)
+      .where(eq(penjemputan.statusPembayaran, 'lunas'));
 
     res.json({
       message: 'Statistik dashboard berhasil diambil',
       data: {
         totalNasabah: Number(totalNasabah) || 0,
         totalBeratSampah: Number(totalBerat) || 0,
-        totalSaldoBeredar: Number(totalSaldo) || 0,
+        totalPendapatan: Number(totalPendapatan) || 0,
       }
     });
   } catch (error: any) {

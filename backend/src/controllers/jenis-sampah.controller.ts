@@ -57,13 +57,20 @@ export const updateJenisSampah = async (req: Request, res: Response) => {
         });
       }
 
-      await tx.update(jenisSampah).set({
-        nama, kategori, hargaPerKg, satuan, deskripsi, aktif, updatedAt: new Date()
-      }).where(eq(jenisSampah.id, id as string));
+      const payload: any = { updatedAt: new Date() };
+      if (nama !== undefined) payload.nama = nama;
+      if (kategori !== undefined) payload.kategori = kategori;
+      if (hargaPerKg !== undefined) payload.hargaPerKg = hargaPerKg;
+      if (satuan !== undefined) payload.satuan = satuan;
+      if (deskripsi !== undefined) payload.deskripsi = deskripsi;
+      if (aktif !== undefined) payload.aktif = aktif;
+
+      await tx.update(jenisSampah).set(payload).where(eq(jenisSampah.id, id as string));
     });
 
     res.json({ message: 'Katalog berhasil diperbarui' });
   } catch (error: any) {
+    console.error("UPDATE JENIS SAMPAH ERROR:", error);
     res.status(500).json({ message: 'Gagal memperbarui data', error: error.message });
   }
 };

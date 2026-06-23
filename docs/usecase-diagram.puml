@@ -1,0 +1,138 @@
+@startuml UseCase_SiBankSampah
+
+' ============================================================
+' USE CASE DIAGRAM - SiBankSampah
+' Sistem Informasi Manajemen Bank Sampah
+' 1 Halaman A4 Landscape
+' ============================================================
+
+skinparam dpi 150
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+left to right direction
+
+skinparam usecase {
+  BackgroundColor #E8F5E9
+  BorderColor #2E7D32
+  FontSize 11
+}
+
+skinparam rectangle {
+  BackgroundColor #FAFAFA
+  BorderColor #2E7D32
+  FontSize 13
+  FontStyle bold
+  RoundCorner 10
+}
+
+skinparam actor {
+  FontSize 12
+}
+
+skinparam note {
+  BackgroundColor #FFFDE7
+  BorderColor #F9A825
+  FontSize 9
+}
+
+' ============================================================
+' AKTOR
+' ============================================================
+actor "Nasabah" as N
+actor "Petugas" as P
+actor "Admin" as A
+
+' ============================================================
+' SISTEM
+' ============================================================
+rectangle "Sistem Informasi Manajemen Bank Sampah (SiBankSampah)" {
+
+  usecase "UC-01\nLogin" as UC01
+  usecase "UC-02\nRegistrasi Nasabah" as UC02
+  usecase "UC-03\nLupa Password" as UC03
+  usecase "UC-04\nReset Password\n(OTP via WhatsApp)" as UC04
+  usecase "UC-05\nAjukan Jemput\nSampah" as UC05
+  usecase "UC-06\nLihat Riwayat\nPenjemputan" as UC06
+  usecase "UC-07\nKelola Permintaan\nJemput" as UC07
+  usecase "UC-08\nKelola\nPembayaran" as UC08
+  usecase "UC-09\nKlasifikasi Sampah\n(AI Brain)" as UC09
+  usecase "UC-10\nLihat Katalog\nJenis Sampah" as UC10
+  usecase "UC-11\nKelola Pengaduan" as UC11
+  usecase "UC-12\nKelola Data\nPengguna" as UC12
+  usecase "UC-13\nKelola Katalog\nJenis Sampah" as UC13
+  usecase "UC-14\nLihat Laporan\n& Statistik" as UC14
+  usecase "UC-15\nKelola WhatsApp\nGateway" as UC15
+  usecase "UC-16\nLihat Dashboard" as UC16
+  usecase "UC-17\nUbah Profil\n& Password" as UC17
+  usecase "UC-18\nNotifikasi Otomatis\nvia WhatsApp" as UC18
+
+}
+
+' ============================================================
+' RELASI NASABAH
+' ============================================================
+N --> UC01
+N --> UC02
+N --> UC03
+N --> UC05
+N --> UC06
+N --> UC08
+N --> UC09
+N --> UC10
+N --> UC11
+N --> UC16
+N --> UC17
+
+' ============================================================
+' RELASI PETUGAS
+' ============================================================
+P --> UC01
+P --> UC07
+P --> UC08
+P --> UC10
+P --> UC11
+P --> UC16
+P --> UC17
+
+' ============================================================
+' RELASI ADMIN
+' ============================================================
+A --> UC01
+A --> UC07
+A --> UC08
+A --> UC11
+A --> UC12
+A --> UC13
+A --> UC14
+A --> UC15
+A --> UC16
+A --> UC17
+
+' ============================================================
+' INCLUDE & EXTEND
+' ============================================================
+UC03 ..> UC04 : <<include>>
+UC05 ..> UC18 : <<include>>
+UC07 ..> UC18 : <<include>>
+UC08 ..> UC18 : <<include>>
+
+' ============================================================
+' CATATAN
+' ============================================================
+note right of UC09
+  AI: OpenRouter (Gemma 3)
+  + fallback keyword lokal
+end note
+
+note right of UC04
+  OTP 6 digit via
+  WhatsApp Baileys
+end note
+
+note right of UC08
+  Metode: COD / Transfer
+  (upload bukti pembayaran)
+end note
+
+@enduml

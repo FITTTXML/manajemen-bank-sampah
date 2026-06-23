@@ -118,6 +118,34 @@ export class WhatsAppService {
       return false;
     }
   }
+
+  public async sendDocument(toNumber: string, documentBuffer: Buffer, fileName: string, caption?: string): Promise<boolean> {
+    if (this.status !== 'CONNECTED' || !this.sock) {
+      console.warn('[WA] Cannot send document — not connected.');
+      return false;
+    }
+
+    let formattedNumber = toNumber.replace(/\D/g, '');
+    if (formattedNumber.startsWith('0')) {
+      formattedNumber = '62' + formattedNumber.substring(1);
+    }
+    const jid = `${formattedNumber}@s.whatsapp.net`;
+
+    try {
+      await this.sock.sendMessage(jid, { 
+        document: documentBuffer, 
+        mimetype: 'application/pdf', 
+        fileName: fileName,
+        caption: caption
+      });
+      console.log(`[WA] Document sent to ${jid}`);
+      return true;
+    } catch (error) {
+      console.error(`[WA] Failed to send doc to ${jid}`, error);
+      return false;
+    }
+  }
+
   public async resetSession(): Promise<void> {
     console.log('[WA] Resetting session — deleting auth folder...');
     

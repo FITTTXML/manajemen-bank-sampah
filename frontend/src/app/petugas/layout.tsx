@@ -3,13 +3,15 @@ import React from "react"
 import { AppLayout } from "@/components/layout/AppLayout"
 import { 
   LayoutDashboard, 
-  Recycle,
-  Brain
+  Truck,
+  Brain,
+  Tag
 } from "lucide-react"
 
 const petugasNavItems = [
   { title: "Dashboard Harian", href: "/petugas/dashboard", icon: LayoutDashboard },
-  { title: "Input Setoran Baru", href: "/petugas/setoran", icon: Recycle },
+  { title: "Kelola Penjemputan", href: "/petugas/penjemputan", icon: Truck },
+  { title: "Katalog & Tarif Jasa", href: "/petugas/katalog", icon: Tag },
   { title: "Pemilahan AI", href: "/petugas/pemilahan", icon: Brain },
 ]
 

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Analisis Perbandingan dan Evaluasi Kelengkapan Struktur Skripsi</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @page {
+      size: A4;
+      margin: 2.5cm 2cm 2.5cm 3cm;
+    }
+
+    body {
+      font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+      font-size: 12pt;
+      line-height: 1.8;
+      color: #1a1a2e;
+      background: #fff;
+      padding: 2.5cm 2cm 2.5cm 3cm;
+    }
+
+    @media print {
+      body { padding: 0; }
+    }
+
+    /* Header / Title Page */
+    .title-page {
+      text-align: center;
+      padding: 60px 20px 40px;
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 80vh;
+    }
+
+    .title-page .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+      color: #fff;
+      padding: 6px 24px;
+      border-radius: 20px;
+      font-size: 10pt;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+
+    .title-page h1 {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 22pt;
+      font-weight: 900;
+      color: #0d1b2a;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    .title-page .subtitle {
+      font-size: 12pt;
+      color: #555;
+      margin-bottom: 40px;
+      font-style: italic;
+    }
+
+    .title-page .meta-box {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      display: inline-block;
+      text-align: left;
+      margin: 0 auto;
+    }
+
+    .title-page .meta-box p {
+      font-size: 11pt;
+      color: #444;
+      margin: 4px 0;
+    }
+
+    .title-page .meta-box strong {
+      color: #1a1a2e;
+      min-width: 160px;
+      display: inline-block;
+    }
+
+    .divider {
+      border: none;
+      height: 3px;
+      background: linear-gradient(90deg, #1e3a5f, #4a90d9, #1e3a5f);
+      margin: 30px 0;
+      border-radius: 2px;
+    }
+
+    .divider-thin {
+      border: none;
+      height: 1px;
+      background: #ddd;
+      margin: 20px 0;
+    }
+
+    /* Headings */
+    h2 {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 16pt;
+      font-weight: 700;
+      color: #0d1b2a;
+      margin: 30px 0 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #1e3a5f;
+    }
+
+    h2 .num {
+      display: inline-block;
+      background: #1e3a5f;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-size: 13pt;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    h3 {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 13pt;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin: 20px 0 10px;
+    }
+
+    /* Paragraphs */
+    p {
+      text-align: justify;
+      margin-bottom: 12px;
+    }
+
+    /* Table */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      line-height: 1.5;
+    }
+
+    thead th {
+      background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+      color: #fff;
+      font-weight: 700;
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 9.5pt;
+      border: 1px solid #1e3a5f;
+    }
+
+    tbody td {
+      padding: 10px 12px;
+      border: 1px solid #d0d0d0;
+      vertical-align: top;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f4f7fb;
+    }
+
+    tbody tr:hover {
+      background: #e8f0fe;
+    }
+
+    /* Highlighted boxes */
+    .callout {
+      background: #fff8e1;
+      border-left: 4px solid #f9a825;
+      padding: 14px 18px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 11pt;
+    }
+
+    .callout.critical {
+      background: #fce4ec;
+      border-left-color: #e53935;
+    }
+
+    .callout.info {
+      background: #e3f2fd;
+      border-left-color: #1e88e5;
+    }
+
+    .callout.success {
+      background: #e8f5e9;
+      border-left-color: #43a047;
+    }
+
+    .callout strong {
+      color: #333;
+    }
+
+    /* Priority list */
+    .priority-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+
+    .priority-list li {
+      position: relative;
+      padding: 14px 14px 14px 56px;
+      margin-bottom: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .priority-list li .priority-num {
+      position: absolute;
+      left: 12px;
+      top: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1e3a5f;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14pt;
+      text-align: center;
+      line-height: 32px;
+    }
+
+    .priority-list li.p1 .priority-num { background: #c62828; }
+    .priority-list li.p2 .priority-num { background: #e65100; }
+    .priority-list li.p3 .priority-num { background: #f9a825; color: #333; }
+    .priority-list li.p4 .priority-num { background: #2e7d32; }
+
+    .priority-list li strong {
+      display: block;
+      font-size: 11pt;
+      color: #0d1b2a;
+      margin-bottom: 4px;
+    }
+
+    .priority-list li p {
+      font-size: 10.5pt;
+      color: #555;
+      margin: 0;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .tag.krusial { background: #ffcdd2; color: #b71c1c; }
+    .tag.penting { background: #ffe0b2; color: #e65100; }
+    .tag.sedang { background: #fff9c4; color: #f57f17; }
+    .tag.minor { background: #c8e6c9; color: #1b5e20; }
+
+    /* Footer */
+    .footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 2px solid #1e3a5f;
+      text-align: center;
+      font-size: 9pt;
+      color: #888;
+    }
+
+    em { color: #555; }
+
+    @media print {
+      .priority-list li { break-inside: avoid; }
+      table { break-inside: auto; }
+      tr { break-inside: avoid; break-after: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE PAGE -->
+  <div class="title-page">
+    <div class="badge">Dokumen Audit Akademik</div>
+    <h1>Laporan Analisis Perbandingan<br>dan Evaluasi Kelengkapan<br>Struktur Skripsi</h1>
+    <p class="subtitle">
+      "Perancangan Sistem Informasi Manajemen Bank Sampah Berbasis Web"
+    </p>
+    <div class="meta-box">
+      <p><strong>Skripsi yang Dievaluasi:</strong> Afif Fudin Fitoyo (Skripsi Afif)</p>
+      <p><strong>Skripsi Pembanding:</strong> Bagus Priambudi (Skripsi Bagus)</p>
+      <p><strong>Metode Evaluasi:</strong> Komparasi Formal &amp; Gap Analysis</p>
+      <p><strong>Tanggal Audit:</strong> Juni 2026</p>
+    </div>
+  </div>
+
+  <!-- BAB 1 -->
+  <h2><span class="num">1</span> Pendahuluan dan Konteks Strategis</h2>
+
+  <p>Laporan analisis ini disusun sebagai instrumen audit akademik untuk mengevaluasi kesiapan naskah skripsi berjudul <strong>"Perancangan Sistem Informasi Manajemen Bank Sampah Berbasis Web"</strong> karya Afif Fudin Fitoyo (selanjutnya disebut "Skripsi Afif") melalui komparasi formal dengan skripsi model berkualitas tinggi berjudul <strong>"Rancang Bangun Sistem Crowdfunding Filantropi..."</strong> karya Bagus Priambudi (selanjutnya disebut "Skripsi Bagus"). Sinkronisasi struktur skripsi dengan standar "lengkap dan rapi" merupakan variabel krusial yang menentukan kredibilitas penulis di hadapan dewan penguji serta menjamin kelancaran proses kelulusan.</p>
+
+  <p>Analisis ini tidak hanya bertujuan melakukan verifikasi administratif atas keberadaan bab, namun melakukan evaluasi mendalam terhadap kedalaman konten, logika metodologi, dan validitas hasil pengujian. Seorang sarjana komputer harus mampu menyajikan dokumentasi teknis yang transparan dan dapat direplikasi. Ketidakhadiran komponen krusial seperti lampiran kode atau tabel pengujian yang sistematis dapat mereduksi karya ilmiah menjadi sekadar laporan proyek teknis tanpa bobot akademik. Berikut adalah detail perbandingan teknis untuk memetakan kesenjangan (<em>gap</em>) yang ada.</p>
+
+  <hr class="divider">
+
+  <!-- BAB 2 -->
+  <h2><span class="num">2</span> Tabel Analisis Perbandingan Komprehensif</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:14%">Bagian Skripsi</th>
+          <th style="width:14%">Status di Skripsi Afif</th>
+          <th style="width:22%">Perbandingan dengan Skripsi Bagus</th>
+          <th style="width:22%">Kekurangan</th>
+          <th style="width:28%">Saran Perbaikan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Halaman Judul & Formalitas</strong></td>
+          <td>Tersedia</td>
+          <td>Keduanya memiliki format standar. Namun, Skripsi Afif memiliki cacat terminologi serius pada Kata Pengantar.</td>
+          <td>Kata Pengantar masih menyebutkan "proposal penelitian" dan "Seminar Proposal".</td>
+          <td>Lakukan audit kata (<em>find & replace</em>) secara menyeluruh; ubah semua istilah "proposal" menjadi "skripsi".</td>
+        </tr>
+        <tr>
+          <td><strong>Abstrak</strong></td>
+          <td>Belum tersedia <span class="tag krusial">Krusial</span></td>
+          <td>Skripsi Bagus menyertakan komponen abstrak sebagai representasi inti penelitian.</td>
+          <td>Tidak adanya ringkasan yang mencakup IMRAD (<em>Introduction, Methods, Results, and Discussion</em>).</td>
+          <td>Segera susun abstrak (Ind/Eng) maksimal 250 kata dengan struktur: Latar belakang, Tujuan, Metode, Hasil Utama, dan Simpulan.</td>
+        </tr>
+        <tr>
+          <td><strong>Bab I: Pendahuluan</strong></td>
+          <td>Tersedia</td>
+          <td>Skripsi Afif sudah menyebutkan lokasi spesifik (Gg. Rukun Pringsewu Utara), namun Sistematika Penulisan masih menyebut dirinya "proposal".</td>
+          <td>Pada poin 1.6 (Sistematika), teks secara eksplisit menyebut "penulisan proposal penelitian ini...".</td>
+          <td>Perbaiki naskah pada Bab 1.6. Pastikan narasi berfokus pada apa yang <em>telah</em> dilakukan, bukan yang <em>akan</em> dilakukan.</td>
+        </tr>
+        <tr>
+          <td><strong>Bab II: Tinjauan Pustaka</strong></td>
+          <td>Tersedia</td>
+          <td>Skripsi Bagus membedah studi terdahulu dengan sangat analitis (Hasna 2024, Zakaria 2021).</td>
+          <td>Skripsi Afif memiliki tabel perbandingan, namun narasi sintesis di bawah tabel kurang tajam dalam membedah gap teknis.</td>
+          <td>Tambahkan paragraf deduktif di bawah Tabel 2.1 untuk menegaskan posisi kebaruan (<em>novelty</em>) sistem bank sampah ini terhadap sistem sebelumnya.</td>
+        </tr>
+        <tr>
+          <td><strong>Bab III: Metodologi</strong></td>
+          <td>Tersedia</td>
+          <td>Skripsi Afif menggunakan <em>Waterfall</em>, sedangkan Skripsi Bagus menggunakan <em>Prototype</em>.</td>
+          <td>Metode Prototype pada Skripsi Bagus menghasilkan dokumentasi UI/UX (3.5) yang lebih iteratif dan visual dibanding Waterfall Afif.</td>
+          <td>Tambahkan sub-bab "Spesifikasi Lingkungan Pengembangan" untuk mendokumentasikan <em>Environment Variables</em> dan <em>API Credentials</em>.</td>
+        </tr>
+        <tr>
+          <td><strong>Bab IV: Hasil & Pembahasan</strong></td>
+          <td>Tersedia</td>
+          <td>Skripsi Bagus menyajikan 12 tabel pengujian (4.1-4.12) yang sangat masif, termasuk Verifikasi OTP (4.2) dan Keamanan (4.11).</td>
+          <td>Pengujian Afif (4.4) masih bersifat deskriptif naratif yang sulit diverifikasi validitasnya secara cepat.</td>
+          <td>Konversi narasi 4.4.1-4.4.6 menjadi tabel formal dengan kolom: <em>Skenario, Test Case, Hasil yang Diharapkan, Hasil Pengujian,</em> dan <em>Kesimpulan</em>.</td>
+        </tr>
+        <tr>
+          <td><strong>Bab V: Penutup</strong></td>
+          <td>Tersedia</td>
+          <td>Keduanya mencakup kesimpulan dan saran.</td>
+          <td>Saran pada Skripsi Afif (5.2) masih bersifat umum.</td>
+          <td>Tambahkan saran teknis spesifik seperti integrasi <em>Payment Gateway</em> atau <em>Auto-debet</em> sebagaimana disarankan dalam Skripsi Bagus.</td>
+        </tr>
+        <tr>
+          <td><strong>Lampiran (Kode & Dokumen)</strong></td>
+          <td>Belum tersedia <span class="tag krusial">Krusial</span></td>
+          <td>Skripsi Bagus melampirkan cuplikan kode penting (React/Express) sebagai bukti autentisitas.</td>
+          <td>Tidak adanya bukti implementasi logika "Realisasi Perhitungan Saldo Otomatis" (4.1.4) yang diklaim di Bab IV.</td>
+          <td><strong>Wajib</strong> melampirkan cuplikan kode (<em>controller/model</em>) untuk membuktikan keaslian logika perhitungan saldo tersebut.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- BAB 3 -->
+  <h2><span class="num">3</span> Evaluasi Kesenjangan (Gap Analysis) — <em>"So What?" Layer</em></h2>
+
+  <p>Kesenjangan fungsional dan dokumentasi antara Skripsi Afif dan Skripsi Bagus memberikan dampak signifikan terhadap kredibilitas naskah secara keseluruhan. Skripsi Bagus terasa jauh lebih profesional karena ia tidak sekadar mengklaim fungsionalitas, tetapi membuktikannya melalui transparansi data teknis.</p>
+
+  <div class="callout critical">
+    <h3>⚠ Masalah Verifikasi dan Otentikasi</h3>
+    <p>Dalam Bab IV (4.1.4), Afif mengklaim adanya "Realisasi Perhitungan Saldo Otomatis". Namun, tanpa adanya lampiran kode program, klaim ini bersifat <strong><em>unverifiable</em></strong> (tidak dapat diverifikasi). Hal ini meninggalkan celah bagi penguji untuk mempertanyakan otentikasi karya atau potensi penggunaan jasa <em>ghostwriter</em>.</p>
+  </div>
+
+  <div class="callout">
+    <h3>📊 Kedalaman Pengujian</h3>
+    <p>Skripsi Bagus menyertakan pengujian <strong>"Keamanan dan Stabilitas" (Tabel 4.11)</strong> dan <strong>"Verifikasi OTP" (Tabel 4.2)</strong>. Sementara itu, pengujian Afif hanya menyentuh permukaan fungsional dasar. Ketiadaan tabel pengujian yang masif membuat naskah Afif terlihat seperti laporan praktikum biasa, bukan sebuah karya riset sarjana komputer.</p>
+  </div>
+
+  <div class="callout info">
+    <h3>🔬 Dampak Metodologis</h3>
+    <p>Pemilihan Waterfall pada Skripsi Afif cenderung kaku. Tanpa adanya dokumentasi teknis yang mendalam mengenai lingkungan pengembangan (seperti pada Tabel 4.1 Skripsi Bagus), replikasi penelitian ini oleh pihak lain akan mustahil dilakukan, yang mana merupakan pelanggaran terhadap prinsip dasar karya ilmiah.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- BAB 4 -->
+  <h2><span class="num">4</span> Ringkasan Strategis dan Prioritas Perbaikan</h2>
+
+  <p>Untuk mencapai standar kualitas akademik yang setara dengan Skripsi Bagus, penulis harus segera melakukan manajemen waktu yang ketat untuk melengkapi naskah. Abaikan bagian kosmetik; fokuslah pada integritas data teknis.</p>
+
+  <ul class="priority-list">
+    <li class="p1">
+      <span class="priority-num">1</span>
+      <strong>Dokumentasi Lampiran Kode Program <span class="tag krusial">Krusial</span></strong>
+      <p>Segera susun lampiran yang berisi cuplikan kode penting, khususnya pada bagian <em>Logic Controller</em> yang menangani <em>Perhitungan Saldo Otomatis</em> dan <em>Koneksi Database</em>. Ini adalah bukti fisik bahwa sistem benar-benar direalisasikan.</p>
+    </li>
+    <li class="p2">
+      <strong>Rekonstruksi Bab IV — Tabel Black Box <span class="tag penting">Penting</span></strong>
+      <span class="priority-num">2</span>
+      <p>Hentikan penggunaan narasi deskriptif pada hasil pengujian. Ubah bagian 4.4 menjadi tabel pengujian formal. Gunakan arsitektur tabel Skripsi Bagus: <em>Skenario, Test Case, Hasil yang Diharapkan, Hasil Pengujian,</em> dan <em>Kesimpulan</em>. Tambahkan pengujian untuk skenario input tidak valid (misal: berat sampah negatif) untuk menunjukkan ketahanan sistem.</p>
+    </li>
+    <li class="p3">
+      <span class="priority-num">3</span>
+      <strong>Penyusunan Abstrak dengan Struktur IMRAD <span class="tag sedang">Sedang</span></strong>
+      <p>Susun abstrak yang mencakup <em>Introduction, Methods, Results,</em> dan <em>Discussion</em>. Pastikan hasil efektivitas (waktu pencatatan dari 10 menit menjadi 2 menit) tertulis dengan jelas.</p>
+    </li>
+    <li class="p4">
+      <span class="priority-num">4</span>
+      <strong>Audit Terminologi dan Sistematika <span class="tag minor">Minor</span></strong>
+      <p>Hapus semua kata "Proposal" yang masih tertinggal di Kata Pengantar dan Bab 1.6 (Sistematika Penulisan). Kegagalan mengganti istilah ini akan dianggap sebagai bentuk kecerobohan fatal oleh dewan penguji.</p>
+    </li>
+  </ul>
+
+  <hr class="divider">
+
+  <!-- BAB 5 -->
+  <h2><span class="num">5</span> Penutup</h2>
+
+  <p>Integritas sebuah skripsi di bidang teknologi informasi tidak diukur dari seberapa canggih antarmukanya, melainkan dari seberapa patuh penulisnya terhadap standar dokumentasi ilmiah dan kejujuran teknis. Skripsi Afif memiliki potensi besar karena mengangkat masalah nyata di <strong>Gg. Rukun Pringsewu Utara</strong>, namun potensi ini akan terkubur jika detail-detail pengujian dan lampiran kode diabaikan.</p>
+
+  <div class="callout success">
+    <strong>✅ Kesimpulan:</strong> Dengan mengikuti panduan audit ini secara disiplin — terutama <em>Prioritas 1</em> (Lampiran Kode) dan <em>Prioritas 2</em> (Tabel Black Box) — naskah akan mencapai standar kualitas yang setara dengan naskah pembanding terbaik di fakultas. Fokus pada integritas data teknis, bukan kosmetik.
+  </div>
+
+  <div class="footer">
+    <p>Dokumen Audit Akademik — Laporan Analisis Perbandingan Struktur Skripsi</p>
+    <p>Disusun: Juni 2026 | Bersifat Internal untuk Keperluan Revisi Naskah</p>
+  </div>
+
+</body>
+</html>

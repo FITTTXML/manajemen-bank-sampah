@@ -12,6 +12,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve uploaded files statically
+import path from 'path';
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 // Test Route
 app.get('/', (req, res) => {
   res.json({ message: 'SiBankSampah API is running successfully' });
@@ -22,8 +26,6 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import adminRoutes from './routes/admin.routes';
 import jenisSampahRoutes from './routes/jenis-sampah.routes';
-import setoranRoutes from './routes/setoran.routes';
-import penarikanRoutes from './routes/penarikan.routes';
 import laporanRoutes from './routes/laporan.routes';
 import nasabahRoutes from './routes/nasabah.routes';
 import petugasRoutes from './routes/petugas.routes';
@@ -37,8 +39,6 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/jenis-sampah', jenisSampahRoutes);
-app.use('/api/v1/setoran', setoranRoutes);
-app.use('/api/v1/penarikan', penarikanRoutes);
 app.use('/api/v1/laporan', laporanRoutes);
 app.use('/api/v1/nasabah', nasabahRoutes);
 app.use('/api/v1/petugas', petugasRoutes);
@@ -67,11 +67,15 @@ process.on('uncaughtException', (err) => {
 });
 
 import { waService } from './services/whatsapp.service';
+import { initCronJobs } from './services/cron.service';
 
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   // Initialize WhatsApp AFTER server is ready (non-blocking)
   waService.init().catch(err => console.error('[WA] Init failed, server continues:', err));
+  
+  // Initialize cron jobs
+  initCronJobs();
 });
 
 server.on('close', () => {

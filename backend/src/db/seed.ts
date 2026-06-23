@@ -58,6 +58,31 @@ async function main() {
     nomorHp: '0833333333',
   }).onConflictDoNothing();
 
+  console.log('Creating Jenis Sampah...');
+  await db.insert(schema.jenisSampah).values([
+    {
+      nama: 'Botol Plastik Bekas',
+      kategori: 'plastik',
+      hargaPerKg: '2500.00',
+      satuan: 'kg',
+      deskripsi: 'Botol air mineral, botol minuman, dll',
+    },
+    {
+      nama: 'Kardus Bekas',
+      kategori: 'kertas',
+      hargaPerKg: '1500.00',
+      satuan: 'kg',
+      deskripsi: 'Kardus mie, kardus paket, dll',
+    },
+    {
+      nama: 'Besi Tua / Logam',
+      kategori: 'logam',
+      hargaPerKg: '4500.00',
+      satuan: 'kg',
+      deskripsi: 'Pipa besi, kaleng, seng',
+    }
+  ]).onConflictDoNothing();
+
   console.log('Database Seeding Completed!');
   process.exit(0);
 }

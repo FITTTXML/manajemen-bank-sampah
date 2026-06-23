@@ -49,7 +49,7 @@ export default function Home() {
             </h1>
             
             <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-              Platform perbankan sampah modern yang memudahkan Anda mengelola, menyetor, dan melacak sampah daur ulang Anda secara waktu nyata.
+              Platform layanan jemput sampah modern yang memudahkan Anda memesan penjemputan, memantau status, dan membayar layanan secara praktis.
             </p>
             
             <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -136,8 +136,8 @@ export default function Home() {
                 <Recycle className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Setor Lebih Mudah</h3>
-                <p className="text-slate-600 dark:text-slate-400">Sistem pencatatan terpusat yang mencatat setiap kilogram sampah yang Anda setorkan ke bank sampah.</p>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Pesan Lebih Mudah</h3>
+                <p className="text-slate-600 dark:text-slate-400">Sistem pemesanan penjemputan yang praktis — cukup isi form dan petugas akan datang ke rumah Anda.</p>
               </div>
             </div>
             <div className="flex gap-4 group cursor-default">
@@ -170,7 +170,7 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">Laporan Real-time</h3>
-                <p className="text-slate-600 dark:text-slate-400">Pantau statistik dan laporan setoran sampah secara real-time dengan grafik interaktif.</p>
+                <p className="text-slate-600 dark:text-slate-400">Pantau statistik dan laporan layanan penjemputan secara real-time dengan grafik interaktif.</p>
               </div>
             </div>
             <div className="flex gap-4 group cursor-default">

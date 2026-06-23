@@ -4,7 +4,7 @@ import React from 'react'
 import api from '@/lib/axios'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Users, Coins, ArrowDownUp, AlertCircle, Loader2 } from 'lucide-react'
+import { Users, TrendingUp, Weight, Truck, Loader2 } from 'lucide-react'
 import {
   LineChart,
   Line,
@@ -36,7 +36,7 @@ export default function AdminDashboardPage() {
   const stats = dashboardData?.stats || {
     totalNasabah: 0,
     totalBeratSampah: 0,
-    totalSaldoBeredar: 0
+    totalPendapatan: 0
   };
 
   const chartData = dashboardData?.chartData || {
@@ -66,19 +66,19 @@ export default function AdminDashboardPage() {
         
         <Card className="shadow-sm border-none bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-900">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Saldo Nasabah Keseluruhan</CardTitle>
-            <div className="p-2 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg"><Coins className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /></div>
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Pendapatan Jasa</CardTitle>
+            <div className="p-2 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg"><TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /></div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-800 dark:text-white">Rp {stats.totalSaldoBeredar.toLocaleString('id-ID')}</div>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Total liabilitas bank sampah</p>
+            <div className="text-2xl font-bold text-slate-800 dark:text-white">Rp {(stats.totalPendapatan || 0).toLocaleString('id-ID')}</div>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Pembayaran lunas terkumpul</p>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm border-none bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-900">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Berat Setoran</CardTitle>
-            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg"><ArrowDownUp className="h-4 w-4 text-indigo-600 dark:text-indigo-400" /></div>
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Berat Sampah</CardTitle>
+            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg"><Weight className="h-4 w-4 text-indigo-600 dark:text-indigo-400" /></div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-800 dark:text-white">{stats.totalBeratSampah} Kg</div>
@@ -86,14 +86,16 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-none bg-gradient-to-br from-white to-rose-50 dark:from-slate-900 dark:to-slate-900">
+        <Card className="shadow-sm border-none bg-gradient-to-br from-white to-blue-50 dark:from-slate-900 dark:to-slate-900">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Pending Penarikan</CardTitle>
-            <div className="p-2 bg-rose-100 dark:bg-rose-900/40 rounded-lg"><AlertCircle className="h-4 w-4 text-rose-600 dark:text-rose-400" /></div>
+            <CardTitle className="text-sm font-medium text-slate-500 dark:text-slate-400">Data Penjemputan</CardTitle>
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg"><Truck className="h-4 w-4 text-blue-600 dark:text-blue-400" /></div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-rose-700 dark:text-rose-500">—</div>
-            <p className="text-xs text-rose-500 dark:text-rose-400 mt-1 font-medium">Cek halaman penarikan</p>
+            <div className="text-2xl font-bold text-blue-700 dark:text-blue-400">
+              <a href="/admin/penjemputan" className="hover:underline">Lihat →</a>
+            </div>
+            <p className="text-xs text-blue-500 dark:text-blue-400 mt-1 font-medium">Pantau status penjemputan</p>
           </CardContent>
         </Card>
       </div>
@@ -102,7 +104,7 @@ export default function AdminDashboardPage() {
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="shadow-sm border-none dark:bg-slate-900">
           <CardHeader>
-            <CardTitle className="text-base dark:text-white">Tren Setoran Mingguan (Kg)</CardTitle>
+            <CardTitle className="text-base dark:text-white">Tren Penjemputan Mingguan (Kg)</CardTitle>
           </CardHeader>
           <CardContent className="h-[300px]">
             {loading ? (

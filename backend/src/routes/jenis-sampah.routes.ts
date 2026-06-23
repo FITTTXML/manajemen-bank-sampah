@@ -14,9 +14,9 @@ router.use(verifyToken);
 
 router.get('/', getAllJenisSampah);
 
-// Restricted to Admin
-router.post('/', requireRole(['admin']), createJenisSampah);
-router.put('/:id', requireRole(['admin']), updateJenisSampah);
+// Restricted to Admin & Petugas (Petugas can't delete)
+router.post('/', requireRole(['admin', 'petugas']), createJenisSampah);
+router.put('/:id', requireRole(['admin', 'petugas']), updateJenisSampah);
 router.delete('/:id', requireRole(['admin']), deleteJenisSampah);
 
 export default router;

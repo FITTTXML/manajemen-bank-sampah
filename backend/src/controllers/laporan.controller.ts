@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from '../db';
-import { setoran, detailSetoran, jenisSampah, nasabah, users } from '../db/schema';
+import { penjemputan, detailPenjemputan, jenisSampah, nasabah, users } from '../db/schema';
 import { eq, gte, and, sql } from 'drizzle-orm';
 
 export const getLaporanData = async (req: Request, res: Response) => {
@@ -41,12 +41,12 @@ export const getLaporanData = async (req: Request, res: Response) => {
     const kategoriDistribution = await db
       .select({
         kategori: jenisSampah.kategori,
-        totalBerat: sql<number>`sum(${detailSetoran.beratKg})`,
+        totalBerat: sql<number>`sum(${detailPenjemputan.beratKg})`,
       })
-      .from(detailSetoran)
-      .innerJoin(jenisSampah, eq(detailSetoran.jenisSampahId, jenisSampah.id))
-      .innerJoin(setoran, eq(detailSetoran.setoranId, setoran.id))
-      .where(gte(setoran.tanggal, startDate))
+      .from(detailPenjemputan)
+      .innerJoin(jenisSampah, eq(detailPenjemputan.jenisSampahId, jenisSampah.id))
+      .innerJoin(penjemputan, eq(detailPenjemputan.penjemputanId, penjemputan.id))
+      .where(gte(penjemputan.createdAt, startDate))
       .groupBy(jenisSampah.kategori);
 
     const pieChartData = kategoriDistribution.map((item) => ({
@@ -57,14 +57,14 @@ export const getLaporanData = async (req: Request, res: Response) => {
     // 2. Trend data - fetch raw data in period range
     const rawDetails = await db
       .select({
-        tanggal: setoran.tanggal,
+        tanggal: penjemputan.createdAt,
         kategori: jenisSampah.kategori,
-        beratKg: detailSetoran.beratKg,
+        beratKg: detailPenjemputan.beratKg,
       })
-      .from(detailSetoran)
-      .innerJoin(setoran, eq(detailSetoran.setoranId, setoran.id))
-      .innerJoin(jenisSampah, eq(detailSetoran.jenisSampahId, jenisSampah.id))
-      .where(gte(setoran.tanggal, startDate));
+      .from(detailPenjemputan)
+      .innerJoin(penjemputan, eq(detailPenjemputan.penjemputanId, penjemputan.id))
+      .innerJoin(jenisSampah, eq(detailPenjemputan.jenisSampahId, jenisSampah.id))
+      .where(gte(penjemputan.createdAt, startDate));
 
     // Group data based on period format
     const trendMap: Record<string, any> = {};
@@ -143,36 +143,36 @@ export const getLaporanData = async (req: Request, res: Response) => {
     // 4. Data Nasabah & Transaksi Terbaru (untuk PDF)
     const recentTransactions = await db
       .select({
-        id: setoran.id,
-        tanggal: setoran.tanggal,
+        id: penjemputan.id,
+        tanggal: penjemputan.createdAt,
         nasabahNama: users.namaLengkap,
-        totalBerat: sql<number>`sum(${detailSetoran.beratKg})`,
-        totalNilai: setoran.totalNilai,
+        totalBerat: sql<number>`sum(${detailPenjemputan.beratKg})`,
+        totalNilai: penjemputan.totalBiaya,
       })
-      .from(setoran)
-      .innerJoin(nasabah, eq(setoran.nasabahId, nasabah.id))
+      .from(penjemputan)
+      .innerJoin(nasabah, eq(penjemputan.nasabahId, nasabah.id))
       .innerJoin(users, eq(nasabah.userId, users.id))
-      .innerJoin(detailSetoran, eq(setoran.id, detailSetoran.setoranId))
-      .where(gte(setoran.tanggal, startDate))
-      .groupBy(setoran.id, setoran.tanggal, users.namaLengkap, setoran.totalNilai)
-      .orderBy(sql`${setoran.tanggal} DESC`)
+      .innerJoin(detailPenjemputan, eq(penjemputan.id, detailPenjemputan.penjemputanId))
+      .where(gte(penjemputan.createdAt, startDate))
+      .groupBy(penjemputan.id, penjemputan.createdAt, users.namaLengkap, penjemputan.totalBiaya)
+      .orderBy(sql`${penjemputan.createdAt} DESC`)
       .limit(10);
 
     const topNasabahRaw = await db
       .select({
         nama: users.namaLengkap,
         noAnggota: nasabah.noAnggota,
-        totalSetoran: sql<number>`count(distinct ${setoran.id})`,
-        totalBerat: sql<number>`sum(${detailSetoran.beratKg})`,
-        totalNilai: sql<number>`sum(${setoran.totalNilai})`,
+        totalSetoran: sql<number>`count(distinct ${penjemputan.id})`,
+        totalBerat: sql<number>`sum(${detailPenjemputan.beratKg})`,
+        totalNilai: sql<number>`sum(${penjemputan.totalBiaya})`,
       })
-      .from(setoran)
-      .innerJoin(nasabah, eq(setoran.nasabahId, nasabah.id))
+      .from(penjemputan)
+      .innerJoin(nasabah, eq(penjemputan.nasabahId, nasabah.id))
       .innerJoin(users, eq(nasabah.userId, users.id))
-      .innerJoin(detailSetoran, eq(setoran.id, detailSetoran.setoranId))
-      .where(gte(setoran.tanggal, startDate))
+      .innerJoin(detailPenjemputan, eq(penjemputan.id, detailPenjemputan.penjemputanId))
+      .where(gte(penjemputan.createdAt, startDate))
       .groupBy(users.namaLengkap, nasabah.noAnggota)
-      .orderBy(sql`sum(${detailSetoran.beratKg}) DESC`)
+      .orderBy(sql`sum(${detailPenjemputan.beratKg}) DESC`)
       .limit(5);
 
     const topNasabah = topNasabahRaw.map(t => ({

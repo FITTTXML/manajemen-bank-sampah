@@ -100,7 +100,7 @@ export default function PengaturanPage() {
               <CheckCircle2 className="h-8 w-8 text-emerald-500 shrink-0" />
               <div className="flex-1">
                 <p className="font-bold text-emerald-700 dark:text-emerald-400">WhatsApp Terhubung!</p>
-                <p className="text-sm text-emerald-600/70 dark:text-emerald-400/60">Bot aktif mengirim notifikasi setoran dan penarikan ke nasabah secara otomatis.</p>
+                <p className="text-sm text-emerald-600/70 dark:text-emerald-400/60">Bot aktif mengirim notifikasi penjemputan dan pembayaran ke nasabah secara otomatis.</p>
               </div>
             </div>
           ) : waStatus?.status === 'QR_READY' && waStatus?.qrCodeUrl ? (

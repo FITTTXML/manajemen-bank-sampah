@@ -15,9 +15,9 @@ import { relations } from 'drizzle-orm';
 // ENUMS
 export const roleEnum = pgEnum('role', ['admin', 'petugas', 'nasabah']);
 export const kategoriSampahEnum = pgEnum('kategori', ['organik', 'plastik', 'kertas', 'logam', 'elektronik', 'kain', 'lainnya']);
-export const metodePenarikanEnum = pgEnum('metode', ['tunai', 'transfer']);
-export const statusPenarikanEnum = pgEnum('status_penarikan', ['menunggu', 'disetujui', 'ditolak', 'selesai']);
-export const tipeNotifikasiEnum = pgEnum('tipe_notifikasi', ['setoran', 'penarikan', 'sistem', 'promosi']);
+export const metodePembayaranEnum = pgEnum('metode_pembayaran', ['cod', 'transfer']);
+export const statusPembayaranEnum = pgEnum('status_pembayaran', ['belum_dibayar', 'menunggu_konfirmasi', 'lunas']);
+export const tipeNotifikasiEnum = pgEnum('tipe_notifikasi', ['penjemputan', 'sistem', 'promosi']);
 export const kanalNotifikasiEnum = pgEnum('kanal', ['in_app', 'email', 'whatsapp']);
 
 // TABLES
@@ -43,7 +43,6 @@ export const nasabah = pgTable('nasabah', {
   nik: varchar('nik', { length: 16 }).notNull().unique(),
   alamat: text('alamat'),
   fotoKtp: text('foto_ktp'),
-  saldo: decimal('saldo', { precision: 15, scale: 2 }).default('0'),
   tanggalGabung: date('tanggal_gabung').defaultNow().notNull(),
   catatan: text('catatan'),
 });
@@ -70,40 +69,7 @@ export const riwayatHargaSampah = pgTable('riwayat_harga_sampah', {
   berlakuSejak: timestamp('berlaku_sejak').defaultNow().notNull(),
 });
 
-export const setoran = pgTable('setoran', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  nasabahId: uuid('nasabah_id').references(() => nasabah.id).notNull(),
-  petugasId: uuid('petugas_id').references(() => users.id).notNull(),
-  totalNilai: decimal('total_nilai', { precision: 15, scale: 2 }).notNull(),
-  tanggal: timestamp('tanggal').defaultNow().notNull(),
-  catatan: text('catatan'),
-  nomorStruk: varchar('nomor_struk', { length: 30 }).unique(),
-});
 
-export const detailSetoran = pgTable('detail_setoran', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  setoranId: uuid('setoran_id').references(() => setoran.id).notNull(),
-  jenisSampahId: uuid('jenis_sampah_id').references(() => jenisSampah.id).notNull(),
-  beratKg: decimal('berat_kg', { precision: 10, scale: 2 }).notNull(),
-  hargaSaatItu: decimal('harga_saat_itu', { precision: 10, scale: 2 }).notNull(),
-  nilai: decimal('nilai', { precision: 10, scale: 2 }).notNull(),
-});
-
-export const penarikan = pgTable('penarikan', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  nasabahId: uuid('nasabah_id').references(() => nasabah.id).notNull(),
-  jumlah: decimal('jumlah', { precision: 15, scale: 2 }).notNull(),
-  metode: metodePenarikanEnum('metode').notNull(),
-  namaBank: varchar('nama_bank', { length: 100 }),
-  nomorRekening: varchar('nomor_rekening', { length: 50 }),
-  status: statusPenarikanEnum('status').default('menunggu').notNull(),
-  alasanTolak: text('alasan_tolak'),
-  diajukanPada: timestamp('diajukan_pada').defaultNow().notNull(),
-  diprosesOleh: uuid('diproses_oleh').references(() => users.id),
-  diprosesPada: timestamp('diproses_pada'),
-  diselesaikanOleh: uuid('diselesaikan_oleh').references(() => users.id),
-  diselesaikanPada: timestamp('diselesaikan_pada'),
-});
 
 export const notifikasi = pgTable('notifikasi', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -151,11 +117,28 @@ export const penjemputan = pgTable('penjemputan', {
   jenisSampahDesc: text('jenis_sampah_desc').notNull(),
   estimasiBerat: varchar('estimasi_berat', { length: 50 }),
   tanggalRequest: timestamp('tanggal_request').defaultNow().notNull(),
+  tanggalJadwal: timestamp('tanggal_jadwal'),
   tanggalJemput: timestamp('tanggal_jemput'),
   status: statusPenjemputanEnum('status').default('menunggu').notNull(),
   petugasId: uuid('petugas_id').references(() => users.id),
   alasanTolak: text('alasan_tolak'),
+  
+  // Payment info
+  totalBiaya: decimal('total_biaya', { precision: 15, scale: 2 }).default('0'),
+  metodePembayaran: metodePembayaranEnum('metode_pembayaran'),
+  buktiPembayaran: text('bukti_pembayaran'),
+  statusPembayaran: statusPembayaranEnum('status_pembayaran').default('belum_dibayar'),
+
   createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const detailPenjemputan = pgTable('detail_penjemputan', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  penjemputanId: uuid('penjemputan_id').references(() => penjemputan.id).notNull(),
+  jenisSampahId: uuid('jenis_sampah_id').references(() => jenisSampah.id).notNull(),
+  beratKg: decimal('berat_kg', { precision: 10, scale: 2 }).notNull(),
+  hargaSaatItu: decimal('harga_saat_itu', { precision: 10, scale: 2 }).notNull(),
+  nilai: decimal('nilai', { precision: 10, scale: 2 }).notNull(), // berat * harga
 });
 
 // RELATIONS
@@ -164,7 +147,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     fields: [users.id],
     references: [nasabah.userId]
   }),
-  setoransDiterima: many(setoran), 
+  penjemputansDiproses: many(penjemputan), 
   notifikasis: many(notifikasi),
 }));
 
@@ -173,34 +156,10 @@ export const nasabahRelations = relations(nasabah, ({ one, many }) => ({
     fields: [nasabah.userId],
     references: [users.id]
   }),
-  setorans: many(setoran),
-  penarikans: many(penarikan),
+  penjemputans: many(penjemputan),
 }));
 
-export const setoranRelations = relations(setoran, ({ one, many }) => ({
-  nasabah: one(nasabah, {
-    fields: [setoran.nasabahId],
-    references: [nasabah.id]
-  }),
-  petugas: one(users, {
-    fields: [setoran.petugasId],
-    references: [users.id]
-  }),
-  details: many(detailSetoran),
-}));
-
-export const detailSetoranRelations = relations(detailSetoran, ({ one }) => ({
-  setoran: one(setoran, {
-    fields: [detailSetoran.setoranId],
-    references: [setoran.id]
-  }),
-  jenisSampah: one(jenisSampah, {
-    fields: [detailSetoran.jenisSampahId],
-    references: [jenisSampah.id]
-  }),
-}));
-
-export const penjemputanRelations = relations(penjemputan, ({ one }) => ({
+export const penjemputanRelations = relations(penjemputan, ({ one, many }) => ({
   nasabahRef: one(nasabah, {
     fields: [penjemputan.nasabahId],
     references: [nasabah.id]
@@ -208,5 +167,17 @@ export const penjemputanRelations = relations(penjemputan, ({ one }) => ({
   petugasRef: one(users, {
     fields: [penjemputan.petugasId],
     references: [users.id]
+  }),
+  details: many(detailPenjemputan),
+}));
+
+export const detailPenjemputanRelations = relations(detailPenjemputan, ({ one }) => ({
+  penjemputan: one(penjemputan, {
+    fields: [detailPenjemputan.penjemputanId],
+    references: [penjemputan.id]
+  }),
+  jenisSampah: one(jenisSampah, {
+    fields: [detailPenjemputan.jenisSampahId],
+    references: [jenisSampah.id]
   }),
 }));

@@ -31,27 +31,27 @@ export default function PetugasDashboardPage() {
           <p className="text-xs mt-2 text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400 inline-block px-2 py-1 rounded-md mb-2 sm:mb-0">Hari Ini</p>
         </div>
         <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-md">
-          <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Setoran</h3>
+          <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Sampah Dijemput</h3>
           <p className="text-3xl font-bold mt-2 text-slate-800 dark:text-white">
             {loading ? <Loader2 className="h-6 w-6 animate-spin text-slate-400"/> : `${data.totalSetoranKg} Kg`}
           </p>
           <p className="text-xs mt-2 text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400 inline-block px-2 py-1 rounded-md mb-2 sm:mb-0">Hari Ini</p>
         </div>
         <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-all hover:shadow-md">
-          <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400">Penarikan Tunai</h3>
+          <h3 className="text-sm font-medium text-slate-500 dark:text-slate-400">Total Pendapatan Jasa</h3>
           <p className="text-3xl font-bold mt-2 text-slate-800 dark:text-white">
             {loading ? <Loader2 className="h-6 w-6 animate-spin text-slate-400"/> : `Rp ${data.penarikanTunai.toLocaleString('id-ID')}`}
           </p>
-          <p className="text-xs mt-2 text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400 inline-block px-2 py-1 rounded-md mb-2 sm:mb-0">Hari Ini</p>
+          <p className="text-xs mt-2 text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400 inline-block px-2 py-1 rounded-md mb-2 sm:mb-0">Hari Ini Lunas</p>
         </div>
       </div>
 
       <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Riwayat Transaksi Harian</h3>
-          <button className="px-4 py-2 bg-emerald-600 text-white rounded-md text-sm font-medium hover:bg-emerald-700 transition">
-            + Input Setoran Baru
-          </button>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Riwayat Penjemputan Harian</h3>
+          <a href="/petugas/penjemputan" className="px-4 py-2 bg-emerald-600 text-white rounded-md text-sm font-medium hover:bg-emerald-700 transition">
+            Lihat Permintaan Penjemputan
+          </a>
         </div>
         
         <div className="overflow-x-auto">
@@ -76,13 +76,13 @@ export default function PetugasDashboardPage() {
                     <td className="py-3 px-4 text-slate-500 dark:text-slate-400">{tx.time}</td>
                     <td className="py-3 px-4 font-medium text-slate-800 dark:text-slate-200">{tx.name}</td>
                     <td className="py-3 px-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${tx.type === 'Setoran' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'}`}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400`}>
                         {tx.type}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{tx.detail}</td>
                     <td className="py-3 px-4 text-right">
-                      <button className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-xs font-medium">Cetak Struk</button>
+                      <button className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 text-xs font-medium">Lihat Detail</button>
                     </td>
                   </tr>
                 ))}

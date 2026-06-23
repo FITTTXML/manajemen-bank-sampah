@@ -17,7 +17,6 @@ export default function NasabahDashboardPage() {
   });
 
   const data = dashboardData || {
-    saldoAktif: 0,
     aktivitasTerakhir: [] as any[],
     informasiHargaSampah: [] as any[]
   };
@@ -29,18 +28,12 @@ export default function NasabahDashboardPage() {
         <div className="absolute -bottom-10 right-20 w-32 h-32 bg-emerald-400/20 rounded-full blur-xl"></div>
         
         <div className="relative z-10">
-          <h2 className="text-emerald-100 dark:text-emerald-200/80 font-medium tracking-wide">Saldo Tabungan Aktif</h2>
-          <div className="mt-2 flex items-baseline gap-2">
-            {loading ? (
-              <Loader2 className="h-8 w-8 animate-spin text-white/70" />
-            ) : (
-              <span className="text-5xl font-extrabold tracking-tight">Rp {data.saldoAktif.toLocaleString('id-ID')}</span>
-            )}
-          </div>
+          <h2 className="text-3xl font-extrabold tracking-tight mb-2">Layanan Jemput Sampah</h2>
+          <p className="text-emerald-100 max-w-md">Kumpulkan sampah Anda dan biarkan petugas kami yang datang menjemput. Cepat, praktis, dan ramah lingkungan!</p>
           
           <div className="mt-8 flex gap-4">
-            <button onClick={() => router.push('/nasabah/penarikan')} className="bg-white text-emerald-700 dark:bg-emerald-800 dark:text-white px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-emerald-700 transition">
-              Riwayat Penarikan
+            <button onClick={() => router.push('/nasabah/penjemputan')} className="bg-white text-emerald-700 dark:bg-emerald-800 dark:text-white px-5 py-2.5 rounded-lg font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-emerald-700 transition">
+              Pesan Penjemputan Sekarang
             </button>
           </div>
         </div>
@@ -57,16 +50,16 @@ export default function NasabahDashboardPage() {
             ) : data.aktivitasTerakhir.map((tx: any, i: number) => (
               <div key={i} className="flex justify-between items-center p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${tx.type === 'Setoran' ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400' : 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400'}`}>
-                    {tx.type === 'Setoran' ? '+' : '-'}
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400`}>
+                    📄
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">{tx.detail}</h4>
                     <p className="text-xs text-slate-500 dark:text-slate-400">{tx.time}</p>
                   </div>
                 </div>
-                <div className={`text-right font-medium ${tx.type === 'Setoran' ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                  {tx.type === 'Setoran' ? '+' : '-'}Rp {tx.amount.toLocaleString('id-ID')}
+                <div className={`text-right font-medium text-amber-600 dark:text-amber-400`}>
+                  Rp {tx.amount.toLocaleString('id-ID')}
                 </div>
               </div>
             ))}

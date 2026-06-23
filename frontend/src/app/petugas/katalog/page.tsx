@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Search, Plus, Recycle, Loader2, Tag, Scale, Edit2 } from 'lucide-react'
+import { Search, Plus, Recycle, Loader2, Tag, Scale } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import api from '@/lib/axios'
@@ -22,13 +22,12 @@ interface JenisSampah {
   aktif: boolean;
 }
 
-export default function JenisHargaPage() {
+export default function KatalogPetugasPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [data, setData] = useState<JenisSampah[]>([])
   const [loading, setLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [editingItem, setEditingItem] = useState<JenisSampah | null>(null)
 
   const { register, handleSubmit, reset, setValue, watch } = useForm()
 
@@ -51,48 +50,19 @@ export default function JenisHargaPage() {
   const onSubmit = async (formData: any) => {
     setIsSubmitting(true)
     try {
-      if (editingItem) {
-        await api.put(`/jenis-sampah/${editingItem.id}`, formData)
-        toast.success("Kategori sampah berhasil diperbarui")
-      } else {
-        await api.post('/jenis-sampah', formData)
-        toast.success("Kategori sampah berhasil ditambahkan")
-      }
+      await api.post('/jenis-sampah', formData)
+      toast.success("Kategori sampah berhasil ditambahkan")
       setIsDialogOpen(false)
       reset()
-      setEditingItem(null)
       fetchData()
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Gagal menyimpan data")
+      toast.error(error.response?.data?.message || "Gagal menambahkan data")
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleEdit = (item: JenisSampah) => {
-    setEditingItem(item)
-    setValue("nama", item.nama)
-    setValue("kategori", item.kategori)
-    setValue("hargaPerKg", parseFloat(item.hargaPerKg))
-    setValue("deskripsi", item.deskripsi || "")
-    setIsDialogOpen(true)
-  }
-
-  const handleOpenNew = () => {
-    setEditingItem(null)
-    reset()
-    setIsDialogOpen(true)
-  }
-
-  const toggleStatus = async (id: string, currentStatus: boolean) => {
-     try {
-      await api.put(`/jenis-sampah/${id}`, { aktif: !currentStatus })
-      toast.success("Status tipe sampah diperbarui")
-      fetchData()
-    } catch (error) {
-      toast.error("Gagal mengubah status")
-    }
-  }
+  // No edit/toggle status functionality for petugas
 
   const filteredData = data.filter(d => 
     d.nama.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -104,19 +74,19 @@ export default function JenisHargaPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Jenis & Tarif Sampah</h1>
-          <p className="text-slate-500 text-sm">Kelola katalog jenis sampah beserta tarif jasa per kilogram yang ditagihkan ke nasabah.</p>
+          <p className="text-slate-500 text-sm">Kelola katalog jenis sampah beserta tarif jasa per kilogram.</p>
         </div>
         
-        <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) { reset(); setEditingItem(null); } }}>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="shrink-0 gap-2" onClick={handleOpenNew}>
+            <Button className="shrink-0 gap-2 bg-emerald-600 hover:bg-emerald-700">
               <Plus className="h-4 w-4" />
               Kategori Baru
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingItem ? 'Edit Kategori Sampah' : 'Tambah Kategori Sampah'}</DialogTitle>
+              <DialogTitle>Tambah Kategori Sampah</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
               <div className="space-y-2">
@@ -125,7 +95,7 @@ export default function JenisHargaPage() {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Kategori Induk</label>
-                <Select onValueChange={(val) => setValue("kategori", val)} value={watch("kategori") || "kertas"}>
+                <Select onValueChange={(val) => setValue("kategori", val)} defaultValue="kertas">
                   <SelectTrigger><SelectValue placeholder="Pilih Kategori" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="organik">Organik</SelectItem>
@@ -149,9 +119,9 @@ export default function JenisHargaPage() {
                 <label className="text-sm font-medium">Deskripsi (Opsional)</label>
                 <Input placeholder="Catatan kriteria penerimaan..." {...register("deskripsi")} />
               </div>
-              <Button type="submit" className="w-full mt-4" disabled={isSubmitting}>
+              <Button type="submit" className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700" disabled={isSubmitting}>
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2"/> : null}
-                {editingItem ? 'Simpan Perubahan' : 'Simpan Ke Katalog'}
+                Simpan Ke Katalog
               </Button>
             </form>
           </DialogContent>
@@ -181,14 +151,13 @@ export default function JenisHargaPage() {
                   <TableHead>Kategori</TableHead>
                   <TableHead className="text-right">Tarif Jasa / Unit</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="w-[100px]">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow><TableCell colSpan={6} className="text-center py-10 opacity-50"><Loader2 className="animate-spin h-6 w-6 mx-auto"/></TableCell></TableRow>
+                  <TableRow><TableCell colSpan={5} className="text-center py-10 opacity-50"><Loader2 className="animate-spin h-6 w-6 mx-auto"/></TableCell></TableRow>
                 ) : filteredData.length === 0 ? (
-                  <TableRow><TableCell colSpan={6} className="text-center py-10 text-slate-500">Tidak ada data sampah.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={5} className="text-center py-10 text-slate-500">Tidak ada data sampah.</TableCell></TableRow>
                 ) : filteredData.map((item, index) => (
                   <TableRow key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
                     <TableCell className="font-medium text-slate-500">{index + 1}</TableCell>
@@ -217,16 +186,6 @@ export default function JenisHargaPage() {
                       <Badge variant={item.aktif ? 'default' : 'secondary'} className={item.aktif ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-400' : ''}>
                         {item.aktif ? 'Diterima' : 'Ditangguhkan'}
                       </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => handleEdit(item)} className="text-xs h-7 w-7 p-0">
-                          <Edit2 className="h-3.5 w-3.5 text-blue-600" />
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => toggleStatus(item.id, item.aktif)} className="text-xs h-7">
-                          {item.aktif ? 'Tangguhkan' : 'Aktifkan'}
-                        </Button>
-                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
