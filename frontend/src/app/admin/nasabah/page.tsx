@@ -21,7 +21,6 @@ const userSchema = z.object({
   password: z.string().min(6, "Minimal 6 karakter"),
   nomorHp: z.string().min(10, "Nomor tidak valid"),
   role: z.enum(["admin", "petugas", "nasabah"]),
-  nik: z.string().optional(),
   alamat: z.string().optional()
 })
 type UserFormValues = z.infer<typeof userSchema>
@@ -156,11 +155,6 @@ export default function ManajemenNasabahPage() {
 
               {watchRole === 'nasabah' && (
                 <>
-                  <div className="space-y-2">
-                    <Label>Nomor Induk Kependudukan (NIK)</Label>
-                    <Input placeholder="3201xxxx" {...register("nik")} />
-                    {errors.nik && <p className="text-xs text-red-500">{errors.nik.message}</p>}
-                  </div>
                   <div className="space-y-2">
                     <Label>Alamat Lengkap</Label>
                     <Input placeholder="Jl. Mawar No. 10..." {...register("alamat")} />

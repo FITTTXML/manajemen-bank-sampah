@@ -13,7 +13,7 @@ const generateToken = (id: string, role: string) => {
 
 export const registerNasabah = async (req: Request, res: Response) => {
   try {
-    const { namaLengkap, email, password, nomorHp, nik, alamat } = req.body;
+    const { namaLengkap, email, password, nomorHp, alamat } = req.body;
 
     // Check if email already exists
     const existingUser = await db.select().from(users).where(eq(users.email, email)).limit(1);
@@ -21,11 +21,7 @@ export const registerNasabah = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Email sudah terdaftar' });
     }
 
-    // Check if NIK already exists
-    const existingNasabah = await db.select().from(nasabah).where(eq(nasabah.nik, nik)).limit(1);
-    if (existingNasabah.length > 0) {
-      return res.status(400).json({ message: 'NIK sudah terdaftar' });
-    }
+
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -53,7 +49,6 @@ export const registerNasabah = async (req: Request, res: Response) => {
       // 2. Create Nasabah Profile
       const [newNasabah] = await tx.insert(nasabah).values({
         userId: newUser.id,
-        nik,
         alamat,
         noAnggota,
       }).returning();

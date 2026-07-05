@@ -40,7 +40,6 @@ export const nasabah = pgTable('nasabah', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').references(() => users.id).notNull(),
   noAnggota: varchar('no_anggota', { length: 20 }).notNull().unique(),
-  nik: varchar('nik', { length: 16 }).notNull().unique(),
   alamat: text('alamat'),
   fotoKtp: text('foto_ktp'),
   tanggalGabung: date('tanggal_gabung').defaultNow().notNull(),

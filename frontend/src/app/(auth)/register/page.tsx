@@ -17,7 +17,6 @@ import { toast } from "sonner"
 const registerSchema = z.object({
   namaLengkap: z.string().min(3, { message: "Nama lengkap minimal 3 karakter" }),
   email: z.string().email({ message: "Email tidak valid" }),
-  nik: z.string().length(16, { message: "NIK harus berjumlah 16 digit" }).regex(/^\d+$/, "NIK hanya boleh berisi angka"),
   noWa: z.string().min(10, { message: "Nomor WhatsApp tidak valid" }),
   password: z.string().min(6, { message: "Password minimal 6 karakter" }),
 })
@@ -39,7 +38,6 @@ export default function RegisterPage() {
         namaLengkap: data.namaLengkap,
         email: data.email,
         password: data.password,
-        nik: data.nik,
         nomorHp: data.noWa
       })
 
@@ -70,13 +68,7 @@ export default function RegisterPage() {
             {errors.namaLengkap && <p className="text-xs text-red-500">{errors.namaLengkap.message}</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="nik">NIK KTP</Label>
-              <Input id="nik" placeholder="3201..." {...register("nik")} />
-              {errors.nik && <p className="text-xs text-red-500">{errors.nik.message}</p>}
-            </div>
-            
+          <div className="grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <Label htmlFor="noWa">No. WhatsApp</Label>
               <Input id="noWa" placeholder="0812..." {...register("noWa")} />

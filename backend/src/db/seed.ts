@@ -41,7 +41,6 @@ async function main() {
     await db.insert(schema.nasabah).values({
       userId: createdUser.id,
       noAnggota: 'BS-2026-0001',
-      nik: '3201010101010101',
       alamat: 'Jl. Merdeka No. 1, Jakarta',
     }).onConflictDoNothing();
   }

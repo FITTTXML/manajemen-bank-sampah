@@ -31,7 +31,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 // Create User (Admin bypass)
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { namaLengkap, email, password, role, nomorHp, nik, alamat } = req.body;
+    const { namaLengkap, email, password, role, nomorHp, alamat } = req.body;
 
     const existingUser = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if (existingUser.length > 0) {
@@ -44,13 +44,6 @@ export const createUser = async (req: Request, res: Response) => {
     const username = email.split('@')[0] + Math.floor(Math.random() * 100);
 
     if (role === 'nasabah') {
-      if (!nik) return res.status(400).json({ message: 'NIK dibutuhkan untuk pendaftaran Nasabah' });
-      
-      const existingNasabah = await db.select().from(nasabah).where(eq(nasabah.nik, nik)).limit(1);
-      if (existingNasabah.length > 0) {
-        return res.status(400).json({ message: 'NIK sudah terdaftar' });
-      }
-
       await db.transaction(async (tx) => {
         const [newUser] = await tx.insert(users).values({
           username, namaLengkap, email, passwordHash: hashedPassword, nomorHp, role
@@ -61,7 +54,6 @@ export const createUser = async (req: Request, res: Response) => {
         
         await tx.insert(nasabah).values({
           userId: newUser.id,
-          nik,
           alamat,
           noAnggota: `BS-${year}-${randomId}`,
         });
