@@ -15,7 +15,7 @@ const nextConfig = {
     return config;
   },
   async rewrites() {
-    const backendUrl = process.env.BACKEND_URL || 'https://manajemen-bank-sampah-production-110e.up.railway.app';
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
     return [
       {
         source: '/api/:path*',
