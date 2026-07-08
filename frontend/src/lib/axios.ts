@@ -30,7 +30,7 @@ api.interceptors.response.use(
     // Only redirect to login on 401 (Unauthorized = token missing/invalid/expired)
     // Do NOT redirect on 403 (Forbidden = user exists but lacks permission)
     if (error.response?.status === 401) {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
         localStorage.removeItem('token');
         localStorage.removeItem('userData');
         window.location.href = '/login';
